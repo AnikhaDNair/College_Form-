@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button, select {
+            margin: 5px 0;
+            padding: 10px;
+            width: 300px;
+        }
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap; 
+        }
+    </style>
+</head>
+<body>
+    <h1>College Form </h1>
+
+    <form id="studentForm">
+        <label for="status">Status:</label>
+        <select id="status" required>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+        </select>
+
+        <input type="text" id="user_id" placeholder= "john_doe_17091999" required>
+        <input type="email" id="college_email" placeholder= "john@xyz.com" required>
+        <input type="text" id="college_roll_number" placeholder=ABCD123 required>
+        <input type="text" id="numbers" placeholder="1,334,4" required>
+        <input type="text" id="alphabets" placeholder="M,B,Z,a" required>
+        <input type="file" id="file" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('studentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('status', document.getElementById('status').value);
+            formData.append('user_id', document.getElementById('user_id').value);
+            formData.append('college_email', document.getElementById('college_email').value);
+            formData.append('college_roll_number', document.getElementById('college_roll_number').value);
+            formData.append('numbers', document.getElementById('numbers').value.split(','));
+            formData.append('alphabets', document.getElementById('alphabets').value.split(','));
+
+            const fileInput = document.getElementById('file');
+            if (fileInput.files[0]) {
+                formData.append('file', fileInput.files[0]);
+            }
+
+            try {
+                const response = await fetch('/api', {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const result = await response.json();
+                document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('result').innerText = 'Error: ' + error.message;
+            }
+        });
+    </script>
+</body>
+</html>
