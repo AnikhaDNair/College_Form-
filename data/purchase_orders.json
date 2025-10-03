@@ -1,0 +1,12 @@
+[
+  {
+    "po_number": "PO-9001",
+    "vendor_name": "Acme Supplies LLC",
+    "currency": "USD",
+    "line_items": [
+      { "description": "Paper Reams", "quantity": 10, "unit_price": 4.50 },
+      { "description": "Black Ink Cartridge", "quantity": 3, "unit_price": 22.00 }
+    ],
+    "max_total": 121.00
+  }
+]

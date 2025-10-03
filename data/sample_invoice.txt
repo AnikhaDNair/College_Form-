@@ -1,0 +1,12 @@
+INVOICE NUMBER: INV-1001
+DATE: 2025-10-01
+VENDOR: Acme Supplies LLC
+PO NUMBER: PO-9001
+
+Items:
+Paper Reams x 10 @ $4.50 = $45.00
+Black Ink Cartridge x 3 @ $22.00 = $66.00
+
+Subtotal: $111.00
+Tax: $9.99
+Total: $120.99
