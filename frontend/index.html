@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Back Office AI Agent - Invoice Processing</title>
+    <style>
+      body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; color: #0f172a; }
+      h1 { margin-bottom: 0.25rem; }
+      .sub { color: #475569; margin-bottom: 1.5rem; }
+      textarea { width: 100%; height: 200px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      .panel { border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+      .row { display: flex; gap: 1rem; flex-wrap: wrap; }
+      .col { flex: 1; min-width: 320px; }
+      button { background: #2563eb; color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; cursor: pointer; }
+      button:hover { background: #1e40af; }
+      code, pre { background: #0b1022; color: #d1e7ff; padding: 8px; border-radius: 8px; overflow: auto; }
+      .muted { color: #64748b; }
+      .footer { margin-top: 2rem; color: #64748b; }
+    </style>
+  </head>
+  <body>
+    <h1>Back Office AI Agent</h1>
+    <div class="sub">Automated invoice processing and validation</div>
+
+    <div class="panel">
+      <h3>Process invoice text</h3>
+      <textarea id="textInput" placeholder="Paste invoice text here..."></textarea>
+      <div style="margin-top: 0.5rem; display:flex; gap: 0.5rem; align-items:center;">
+        <button id="processText">Process</button>
+        <button id="loadSample">Load sample text</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Process invoice JSON</h3>
+      <input type="file" id="jsonFile" accept="application/json" />
+      <button id="processJson">Upload & Process</button>
+      <div class="muted">Expected schema includes: invoice_number, vendor_name, po_number, line_items...</div>
+    </div>
+
+    <div class="row">
+      <div class="panel col">
+        <h3>Result</h3>
+        <pre id="result"><span class="muted">No result yet</span></pre>
+      </div>
+      <div class="panel col">
+        <h3>Quick status</h3>
+        <div id="status"><span class="muted">—</span></div>
+      </div>
+    </div>
+
+    <div class="footer">Title: <strong>back office ai agent for automated invoice processing and validation</strong></div>
+
+    <script>
+      const base = '';
+
+      async function handleProcessText() {
+        const text = document.getElementById('textInput').value;
+        const form = new FormData();
+        form.append('text', text);
+        const res = await fetch(base + '/process/text', { method: 'POST', body: form });
+        const json = await res.json();
+        render(json);
+      }
+
+      async function handleProcessJson() {
+        const file = document.getElementById('jsonFile').files[0];
+        if (!file) { alert('Select a JSON file'); return; }
+        const form = new FormData();
+        form.append('file', file);
+        const res = await fetch(base + '/process/json', { method: 'POST', body: form });
+        const json = await res.json();
+        render(json);
+      }
+
+      async function handleLoadSample() {
+        const res = await fetch(base + '/sample');
+        const json = await res.json();
+        render(json);
+      }
+
+      function render(json) {
+        document.getElementById('result').textContent = JSON.stringify(json, null, 2);
+        const status = json?.validation?.status || 'unknown';
+        const discrepancies = json?.validation?.discrepancies || [];
+        document.getElementById('status').innerHTML = `<div><strong>Status:</strong> ${status}</div>` +
+          `<div><strong>Discrepancies:</strong> ${discrepancies.length}</div>`;
+      }
+
+      document.getElementById('processText').addEventListener('click', handleProcessText);
+      document.getElementById('processJson').addEventListener('click', handleProcessJson);
+      document.getElementById('loadSample').addEventListener('click', handleLoadSample);
+    </script>
+  </body>
+  </html>
+

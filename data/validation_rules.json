@@ -1,0 +1,6 @@
+{
+  "require_po": true,
+  "require_vendor_match": true,
+  "amount_tolerance": 0.02,
+  "line_tolerance": 0.02
+}
